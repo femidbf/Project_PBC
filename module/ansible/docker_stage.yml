@@ -1,0 +1,21 @@
+---
+ - hosts: docker-stage
+   become: true
+   tasks:
+   - name: login to dockerhub
+     command: cat /home/ubuntu/file.txt | docker login -u cloudhight --password stdin
+   - name: Stop any container running
+     command: docker stop pet-bank-container
+     ignore_errors: yes
+   - name: Remove stopped container
+     command: docker rm pet-bank-container
+     ignore_errors: yes
+   - name: Remove docker image
+     command: docker rmi cloudhight/pet-bank-image
+     ignore_errors: yes
+   - name: Pull docker image from dockerhub
+     command: docker pull cloudhight/pet-bank-image
+     ignore_errors: yes
+   - name: Create container from pet adoption image
+     command: docker run -it -d --name pet-bank-container -p 8080:8085 cloudhight/pet-bank-image
+     ignore_errors: yes

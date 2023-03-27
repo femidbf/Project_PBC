@@ -1,0 +1,18 @@
+---
+ - hosts: localhost
+  #root access to user
+   become: true
+   tasks:
+   - name: login to Cloudhight dockerhub
+     command: cat /home/ubuntu/file.txt | docker login -u cloudhight --password-stdin
+   - name: Create docker image from Pet Adoption war file
+     command: docker build -t pet-bank-image .
+     args:
+       chdir: /opt/docker
+   - name: Add tag to image
+     command: docker tag pet-bank-image cloudhight/pet-bank-image
+   - name: Push image to docker hub
+     command: docker push cloudhight/pet-bank-image
+   - name: Remove docker image from Ansible node
+     command: docker rmi pet-bank-image cloudhight/pet-bank-image
+     ignore_errors: yes
