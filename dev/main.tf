@@ -66,10 +66,19 @@ module "sonarqube" {
 module "jenkins" {
   source = "../module/jenkins"
   redhat_ami = var.ami-r
-  docker-stage-sg = module.sg.jenkins_sg_id
+  jenkins-sg = module.sg.jenkins_sg_id
   prvsubnet  = module.vpc.PrvSN2-id
   key_name   = module.keypair.keypair_id
   
+}
+
+module "jenkins_lb" {
+  source = "../module/jenkins_lb"
+  pubsubnet = module.vpc.PubSN2-id
+  securitygroup_id = module.jenkins_lb.jenkins-lb-sg-id
+  instance_id = module.jenkins.jenkins_ID
+  vpc_name = module.vpc.vpc_name
+
 }
 
 
