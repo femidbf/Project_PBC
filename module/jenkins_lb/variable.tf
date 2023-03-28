@@ -1,19 +1,19 @@
 variable "jenkins-lb-name" {
     default = "jenkins-lb"
 }
-variable "subnet_id" {
+variable "pubsubnet" {
     default     = "dummy"
 }
 variable "securitygroup_id" {
    default="dummy"
 }
-variable "lb_instance_port" {
+variable "proxy_port" {
     default = 8080
 }
 variable "instance-lb_protocol" {
    default = "http"
 }
-variable "lb_port" {
+variable "http_port" {
     default = 80
 }
 variable "healthy_threshold" {
@@ -38,3 +38,14 @@ variable "instance_id" {
     default = "dummy"
 }
 
+variable "jenkins-lb_sg_name" {
+    default = "Project_PBC_jenkins-lb-sg" 
+}
+
+variable "vpc_name" {
+    default = "dummyy"
+}
+
+variable "all_access" {
+    default = "0.0.0.0/0"
+}

@@ -1,12 +1,13 @@
+# Create Jenkins Load Balancer
 resource "aws_elb" "jenkins-lb" {
   name            = var.jenkins-lb-name
-  subnets         = [var.subnet_id]
+  subnets         = [var.pubsubnet]
   security_groups = [var.securitygroup_id]
 
   listener {
-    instance_port     = var.lb_instance_port
+    instance_port     = var.proxy_port
     instance_protocol = var.instance-lb_protocol
-    lb_port           = var.lb_port
+    lb_port           = var.http_port
     lb_protocol       = var.instance-lb_protocol
   }
 
@@ -29,3 +30,36 @@ resource "aws_elb" "jenkins-lb" {
   }
 }
 
+# Create Jenkins Load Balancer Security Group
+resource "aws_security_group" "jenkins-lb_sg_name" {
+  name        = var.jenkins-lb_sg_name
+  description = "Allow inbound traffic"
+  vpc_id      = var.vpc_name
+
+  ingress {
+    description = "HTTP"
+    from_port   = var.http_port
+    to_port     = var.http_port
+    protocol    = "tcp"
+    cidr_blocks = [var.all_access]
+  }
+
+  ingress {
+    description = "Allow Proxy Access"
+    from_port   = var.proxy_port
+    to_port     = var.proxy_port
+    protocol    = "tcp"
+    cidr_blocks = [var.all_access]
+  }
+
+    egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = [var.all_access]
+  }
+
+  tags = {
+    Name = var.jenkins-lb_sg_name
+  }
+}
