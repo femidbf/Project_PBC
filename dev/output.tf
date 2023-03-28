@@ -19,6 +19,6 @@ output "sonar_pubip" {
 }
 
 output "jenkins-lb_dns" {
-  value = module.jenkins.jenkins-lb.dns_name
+  value = module.jenkins_lb.jenkins_lb_dns_name
 }
 
